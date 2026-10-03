@@ -1,0 +1,102 @@
+basePath: /
+definitions:
+  dto.AccessTokenResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  dto.StatusResponse:
+    properties:
+      status:
+        example: OK
+        type: string
+    type: object
+  dto.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  dto.UserRequestAdd:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 72
+        minLength: 2
+        type: string
+    required:
+    - email
+    - password
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Booking service API
+  title: Booking API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      description: Returns JWT token
+      parameters:
+      - description: Registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequestAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AccessTokenResponse'
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: Logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.StatusResponse'
+      tags:
+      - auth
+  /auth/me:
+    get:
+      description: Returns User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.User'
+      tags:
+      - auth
+  /auth/register:
+    post:
+      description: Add User with hashed password
+      parameters:
+      - description: Registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequestAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.StatusResponse'
+      tags:
+      - auth
+swagger: "2.0"
