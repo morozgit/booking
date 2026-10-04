@@ -38,9 +38,9 @@ func (s *UserService) VerifyPassword(plainPassword, hashedPassword string) bool 
 }
 
 func (s *UserService) CreateAccessToken(userID uint) (string, error) {
-	secret := os.Getenv("JWT_SECRET")
+	secret := os.Getenv("JWT_SECRET_KEY")
 	if secret == "" {
-		return "", errors.New("JWT_SECRET is not set")
+		return "", errors.New("JWT_SECRET_KEY is not set")
 	}
 
 	claims := jwt.MapClaims{
@@ -57,7 +57,7 @@ func (s *UserService) GetUserIDFromToken(r *http.Request) (uint, error) {
 	if err != nil {
 		return 0, ErrUnauthorized
 	}
-	secret := os.Getenv("JWT_SECRET")
+	secret := os.Getenv("JWT_SECRET_KEY")
 	if secret == "" {
 		return 0, ErrUnauthorized
 	}
@@ -102,8 +102,8 @@ func (s *UserService) RegisterUser(ctx context.Context, req dto.UserRequestAdd) 
 	return s.repo.CreateUser(ctx, user)
 }
 
-func (s *UserService) Login(req dto.UserRequestAdd) (*models.UserModel, error) {
-	user, err := s.repo.GetUser(req.Email)
+func (s *UserService) Login(ctx context.Context, req dto.UserRequestAdd) (*models.UserModel, error) {
+	user, err := s.repo.GetUser(ctx, req.Email)
 	if err != nil {
 		return nil, ErrInvalidCredentials
 	}

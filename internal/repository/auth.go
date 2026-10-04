@@ -38,10 +38,10 @@ func (r *UserRepository) CreateUser(ctx context.Context, user *models.UserModel)
 	return err
 }
 
-func (r *UserRepository) GetUser(email string) (*models.UserModel, error) {
+func (r *UserRepository) GetUser(ctx context.Context, email string) (*models.UserModel, error) {
 	var user models.UserModel
 
-	err := r.db.Where("email = ?", email).First(&user).Error
+	err := r.db.WithContext(ctx).Where("email = ?", email).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil

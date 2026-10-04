@@ -69,6 +69,7 @@ func (h *UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 // @Param request body dto.UserRequestAdd true "Registration data"
 // @Router       /auth/login [post]
 func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	var req dto.UserRequestAdd
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -77,7 +78,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.Login(req)
+	user, err := h.service.Login(ctx, req)
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidCredentials) {
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
