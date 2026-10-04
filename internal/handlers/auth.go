@@ -121,13 +121,14 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 // @Success      200 {object} dto.User
 // @Router       /auth/me [get]
 func (h *UserHandler) GetMe(w http.ResponseWriter, r *http.Request) {
-	userID, err := h.service.GetUserIDFromToken(r)
+	ctx := r.Context()
+	userID, err := h.service.GetUserIDFromToken(ctx, r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	user, err := h.service.GetByID(userID)
+	user, err := h.service.GetByID(ctx, userID)
 	if err != nil {
 		h.log.Error("failed to get current user", "error", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)

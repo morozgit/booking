@@ -21,10 +21,10 @@ func (r *BaseRepository[T]) Add(ctx context.Context, model *T) error {
 	return r.db.WithContext(ctx).Create(model).Error
 }
 
-func (r *BaseRepository[T]) GetOneOrNone(filters map[string]any) (*T, error) {
+func (r *BaseRepository[T]) GetOneOrNone(ctx context.Context, filters map[string]any) (*T, error) {
 	var model T
 
-	query := r.db
+	query := r.db.WithContext(ctx)
 
 	for field, value := range filters {
 		query = query.Where(field+" = ?", value)

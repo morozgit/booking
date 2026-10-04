@@ -52,8 +52,8 @@ func (s *UserService) CreateAccessToken(userID uint) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func (s *UserService) GetUserIDFromToken(r *http.Request) (uint, error) {
-	cookie, err := r.Cookie("access_token")
+func (s *UserService) GetUserIDFromToken(ctx context.Context, r *http.Request) (uint, error) {
+	cookie, err := r.WithContext(ctx).Cookie("access_token")
 	if err != nil {
 		return 0, ErrUnauthorized
 	}
@@ -118,8 +118,8 @@ func (s *UserService) Login(ctx context.Context, req dto.UserRequestAdd) (*model
 	return user, nil
 }
 
-func (s *UserService) GetByID(userID uint) (dto.User, error) {
-	user, err := s.repo.GetOneOrNone(map[string]any{
+func (s *UserService) GetByID(ctx context.Context, userID uint) (dto.User, error) {
+	user, err := s.repo.GetOneOrNone(ctx, map[string]any{
 		"id": userID,
 	})
 	if err != nil {
