@@ -5,6 +5,20 @@ definitions:
       access_token:
         type: string
     type: object
+  dto.HotelAdd:
+    properties:
+      location:
+        maxLength: 400
+        minLength: 2
+        type: string
+      title:
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - location
+    - title
+    type: object
   dto.StatusResponse:
     properties:
       status:
@@ -99,4 +113,23 @@ paths:
             $ref: '#/definitions/dto.StatusResponse'
       tags:
       - auth
+  /hotels/:
+    post:
+      description: Add Hotel
+      parameters:
+      - description: Registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HotelAdd'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.StatusResponse'
+      tags:
+      - hotels
 swagger: "2.0"

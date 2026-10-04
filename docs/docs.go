@@ -112,6 +112,36 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/hotels/": {
+            "post": {
+                "description": "Add Hotel",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "hotels"
+                ],
+                "parameters": [
+                    {
+                        "description": "Registration data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.HotelAdd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.StatusResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -120,6 +150,25 @@ const docTemplate = `{
             "properties": {
                 "access_token": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.HotelAdd": {
+            "type": "object",
+            "required": [
+                "location",
+                "title"
+            ],
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "maxLength": 400,
+                    "minLength": 2
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
                 }
             }
         },

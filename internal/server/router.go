@@ -18,7 +18,7 @@ type Handlers struct {
 	Auth *handlers.UserHandler
 	//Booking  *booking.Handler
 	//Room     *room.Handler
-	//Hotel    *hotel.Handler
+	Hotel *handlers.HotelsHandler
 	//Facility *facility.Handler
 	//Image    *image.Handler
 }
@@ -54,6 +54,11 @@ func NewRouter(log *slog.Logger, h Handlers) http.Handler {
 		r.Post("/login", h.Auth.Login)
 		r.Get("/me", h.Auth.GetMe)
 		r.Post("/logout", h.Auth.Logout)
+	})
+
+	r.Route("/hotels", func(r chi.Router) {
+		r.Post("/", h.Hotel.CreteHotel)
+
 	})
 
 	r.Get("/swagger/*", httpSwagger.Handler())

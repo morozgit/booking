@@ -28,15 +28,20 @@ func New(cfg *config.Config, log *slog.Logger) (*App, error) {
 		log.Error("Failed to initialize storage:", sl.Err(err))
 		os.Exit(1)
 	}
-	
+
 	validate := validator.New()
 
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userHandler := handlers.NewUserHandler(userService, validate, log)
 
+	hotelRepository := repository.NewHotelsRepository(db)
+	hotelService := service.NewHotelsService(hotelRepository)
+	hotelHandler := handlers.NewHotelsHandler(hotelService)
+
 	router := server.NewRouter(log, server.Handlers{
-		Auth: userHandler,
+		Auth:  userHandler,
+		Hotel: hotelHandler,
 	})
 	srv := server.New(cfg, router, log)
 
